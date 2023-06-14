@@ -2,6 +2,7 @@ import DropdownOptions from "@/components/common/DropdownOptions";
 import { Editor } from "@tiptap/react";
 import { FC } from "react";
 import { AiFillCaretDown } from "react-icons/ai";
+import { getFocusedEditor } from "../EditorUtils";
 
 interface Props {
   editor: Editor | null;
@@ -14,45 +15,52 @@ const ToolBar: FC<Props> = ({ editor }): JSX.Element | null => {
     {
       label: "Paragraph",
       onClick: () => {
-        console.log("paragraph clicked");
+        getFocusedEditor(editor).setParagraph().run();
       },
     },
     {
       label: "Heading 1",
       onClick: () => {
-        console.log("heading 1 clicked");
+        getFocusedEditor(editor).toggleHeading({ level: 1 }).run();
       },
     },
     {
       label: "Heading 2",
       onClick: () => {
-        console.log("heading 2 clicked");
+        getFocusedEditor(editor).toggleHeading({ level: 2 }).run();
       },
     },
     {
       label: "Heading 3",
       onClick: () => {
-        console.log("heading 3 clicked");
+        getFocusedEditor(editor).toggleHeading({ level: 3 }).run();
       },
     },
   ];
 
+  const getLabel = (): string => {
+    if (editor.isActive("heading", { level: 1 })) return "Heading 1";
+    if (editor.isActive("heading", { level: 2 })) return "Heading 2";
+    if (editor.isActive("heading", { level: 3 })) return "Heading 3";
+
+    return "Paragraph";
+  };
+
   const Head = () => {
-    return <div className="flex">
-        <p>Paragraph</p>
+    return (
+      <div className="flex items-center space-x-2 text-primary-dark dark:text-primary">
+        <p>{getLabel()}</p>
         <AiFillCaretDown />
-    </div>
-  }
+      </div>
+    );
+  };
 
   // heading 1, 2, 3 "bold" "italic" "underline" "strike" "quote" "code" "code-block" "insert-link" "lists (ol and ul)" "embed youtube" "insert image"
 
   return (
     <div>
       {/* paragraph , heading 1, 2, 3 */}
-      <DropdownOptions
-        options={options}
-        head={<Head />}
-      />
+      <DropdownOptions options={options} head={<Head />} />
     </div>
   );
 };
