@@ -1,23 +1,28 @@
 import { FC, useState } from "react";
 import { BsLink45Deg } from "react-icons/bs";
 import Button from "../ToolBar/Button";
-import LinkForm from "./LinkForm";
+import LinkForm, { linkOption } from "./LinkForm";
 
-interface Props {}
+interface Props {
+  onSubmit(link: linkOption): void;
+}
 
-const InsertLink: FC<Props> = (props): JSX.Element => {
+const InsertLink: FC<Props> = ({ onSubmit }): JSX.Element => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div onKeyDown={({key}) => {
-        if (key === 'Escape') setVisible(false)
-    }} className="relative">
+    <div
+      onKeyDown={({ key }) => {
+        if (key === "Escape") setVisible(false);
+      }}
+      className="relative"
+    >
       <Button onClick={() => setVisible(!visible)}>
         <BsLink45Deg />
       </Button>
 
       <div className="absolute top-full mt-4 right-0 z-50">
-        <LinkForm visible={visible} />
+        <LinkForm visible={visible} onSubmit={onSubmit} />
       </div>
     </div>
   );
