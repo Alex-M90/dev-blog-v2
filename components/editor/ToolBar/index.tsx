@@ -63,8 +63,10 @@ const ToolBar: FC<Props> = ({ editor }): JSX.Element | null => {
     return "Paragraph";
   };
 
-  const handleLinkSubmit = (link: linkOption) => {
-    console.log(link);
+  const handleLinkSubmit = ({ url, openInNewTab }: linkOption) => {
+    const { commands } = editor;
+    if (openInNewTab) commands.setLink({ href: url, target: "_blank" });
+    else commands.setLink({ href: url });
   };
 
   const Head = () => {

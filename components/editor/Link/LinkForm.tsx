@@ -1,5 +1,6 @@
 import { type } from "os";
 import { FC, useState } from "react";
+import { validateUrl } from "../EditorUtils";
 
 interface Props {
   visible: boolean;
@@ -11,16 +12,21 @@ export type linkOption = {
   openInNewTab: boolean;
 };
 
-const LinkForm: FC<Props> = ({ visible, onSubmit }): JSX.Element | null => {
-  const [link, setLink] = useState<linkOption>({
+const defaultLink = {
     url: "",
     openInNewTab: false,
-  });
+}
+
+const LinkForm: FC<Props> = ({ visible, onSubmit }): JSX.Element | null => {
+  const [link, setLink] = useState<linkOption>(defaultLink);
 
   const handleSubmit = () => {
-    if (!link.url.trim()) return;
+    onSubmit({ ...link, url: validateUrl(link.url) });
+    resetForm()
+  };
 
-    onSubmit(link);
+  const resetForm = () => {
+    setLink({ ...defaultLink });
   };
 
   if (!visible) return null;
