@@ -1,5 +1,5 @@
 import { FC } from "react";
-import NextImage from "next/image";
+import NextImage from "next/legacy/image";
 import CheckMark from "@/components/common/CheckMark";
 
 interface Props {
@@ -10,7 +10,10 @@ interface Props {
 
 const Image: FC<Props> = ({ src, selected, onClick }): JSX.Element => {
   return (
-    <div onClick={onClick} className="relative rounded overflow-hidden cursor-pointer">
+    <div
+      onClick={onClick}
+      className="relative rounded overflow-hidden cursor-pointer"
+    >
       <NextImage
         src={src}
         width={200}
