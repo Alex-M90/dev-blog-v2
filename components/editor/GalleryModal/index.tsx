@@ -1,6 +1,7 @@
 import ModalContainer, { ModalProps } from "@/components/common/ModalContainer";
 import { FC, useState } from "react";
 import Gallery from "./Gallery";
+import Image from "next/legacy/image";
 
 interface Props extends ModalProps {}
 
@@ -96,7 +97,11 @@ const GalleryModal: FC<Props> = ({ visible, onClose }): JSX.Element => {
           </div>
 
           {/* image selection and upload */}
-          <div className="basis-[25%]"></div>
+          <div className="basis-[25%]">
+            <div className="relative aspect-video bg-png-pattern">
+              <Image src={selectedImage} layout="fill" objectFit="contain" />
+            </div>
+          </div>
         </div>
       </div>
     </ModalContainer>
