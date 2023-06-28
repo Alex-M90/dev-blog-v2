@@ -35,6 +35,7 @@ const uploadNewImage: NextApiHandler = (req, res) => {
   });
 };
 
-const readAllImages: NextApiHandler = (req, res) => {};
+const readAllImages: NextApiHandler = (req, res) => {
+};
 
 export default handler;
