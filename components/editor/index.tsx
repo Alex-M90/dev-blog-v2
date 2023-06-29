@@ -9,12 +9,19 @@ import EditLink from "./Link/EditLink";
 import Youtube from "@tiptap/extension-youtube";
 import GalleryModal, { ImageSelectionResult } from "./GalleryModal";
 import TipTapImage from "@tiptap/extension-image";
+import axios from "axios";
 
 interface Props {}
 
 const Editor: FC<Props> = (props): JSX.Element => {
   const [selectionRange, setSelectionRange] = useState<Range>();
   const [showGallery, setShowGallery] = useState(false);
+  const [images, setImages] = useState<{src: string}[]>([]);
+
+  const fetchImages = async () => {
+   const { data } = await axios('/api/image');
+   setImages(data.images)
+  }
 
   const editor = useEditor({
     extensions: [
@@ -76,6 +83,10 @@ const Editor: FC<Props> = (props): JSX.Element => {
     }
   }, [editor, selectionRange]);
 
+  useEffect(() => {
+    fetchImages();
+  }, []);
+
   return (
     <>
       <div className="p-3 dark:bg-primary-dark bg-primary">
@@ -92,6 +103,7 @@ const Editor: FC<Props> = (props): JSX.Element => {
         visible={showGallery}
         onClose={() => setShowGallery(false)}
         onSelect={handleImageSelection}
+        images={images}
       />
     </>
   );

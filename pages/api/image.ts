@@ -1,6 +1,7 @@
 import { NextApiHandler } from "next";
 import formidable from "formidable";
 import cloudinary from "../../lib/cloudinary";
+import { ImageResponse } from "next/server";
 
 export const config = {
   api: { bodyParser: false },
@@ -24,18 +25,34 @@ const uploadNewImage: NextApiHandler = (req, res) => {
   form.parse(req, async (err, fields, files) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    const imageFile = files.image as formidable.File;
-    const { secure_url } = await cloudinary.uploader.upload(
-      imageFile.filepath,
+    const imageFile = files.image as formidable.File[];
+    const { secure_url, url } = await cloudinary.uploader.upload(
+      imageFile[0].filepath,
       {
         folder: "dev-blogs",
       }
     );
-    res.json({ image: secure_url });
+    res.json({ image: secure_url, url });
   });
 };
 
-const readAllImages: NextApiHandler = (req, res) => {
+const readAllImages: NextApiHandler = async (req, res) => {
+  try {
+    const { resources } = await cloudinary.api.resources({
+      resource_type: "image",
+      type: "upload",
+      prefix: "dev-blogs",
+    });
+    const images = resources.map(({ secure_url }: any) => ({
+      src: secure_url,
+    }));
+    res.json({ images });
+    
+  } catch (error: any) {
+    res.status(500).json({error: error.message})
+  }
+
+  
 };
 
 export default handler;
